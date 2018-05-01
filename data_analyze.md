@@ -1,13 +1,43 @@
 # Scikit-learn
 ### Interpolation&Fitting&Regression
 * #### Interpolation
+method = ["nearest","zero","slinear","quadratic","cubic"]
+##### 1D interpolate
+```  
+f = scipy.interpolate.interp1d(x,y,kind=method)
+ynew = f(xnew) #xnew为要插值的点
+```  
+##### 外推UnivariateSpline
+```
+scipy.interpolate.UnivariateSpline(x,y,w=None,bbox=[None,None],k=3,s=None)
+```
+x,y是X-Y坐标数组  
+w是每个数据点的权重值  
+k为样条曲线的阶数(1<=k && k<=5)  
+s为平滑参数
+s=0，样条曲线强制通过所有数据点
+s>0,满足∑(w(y−spline(x)))2≤s
+#### 2D interpolate
+```
+x,y=np.mgrid[-1:1:8j,-1:1:8j]
+z=func(x,y)
+func=interpolate.interp2d(x,y,z,kind='cubic')
+xnew=np.linspace(-1,1,100)
+ynew=np.linspace(-1,1,100)
+znew=func(xnew,ynew)#xnew, ynew是一维的，输出znew是二维的
+xnew,ynew=np.mgrid[-1:1:100j,-1:1:100j]#统一变成二维，便于下一步画图
+```
+#### 散乱点
+```
+func=interpolate.Rbf(x,y,z,function='multiquadric')
+```
 
 * #### Fitting
 ```
 p = numpy.polyfit(x,y,k)
 p = scipy.polyfit(x,y,k)
 ```
-![]('./imgs/fitres_v.png')
+![](./imgs/fitres_v.png)
 
 * #### Regression
 ```
