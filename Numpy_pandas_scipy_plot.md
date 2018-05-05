@@ -4,6 +4,7 @@
 * 转置：data.transpose()&data.T(list)------list为转置的列下标
 * 协方差矩阵：np.cov(data,rowvar=0)------[rowvar=0]------行为特征
 * 求平均值：np.mean(data,axis=0)------[axis=0按列]
+* 求阶乘：np.math.factorial(k)
 
 ## Pandas
 * #### Data input
@@ -33,6 +34,9 @@ b = data.loc['indname1':'indname2','columnname'] #返回Series
 ## Scipy
 
 ## Matplotlib
+* ### Matplotlib.pyplot&pylab
+读取图像: pl.imread(path) #无pillow包仅支持png  
+显示图像: pl.imshow()
 
 * ### Seaborn
 ```
