@@ -78,11 +78,12 @@ dsolve(a)
 ```
 * ### 代数方程
 ```
-solve(f,var) # 求解f=0的解```
-
+solve(f,var) # 求解f=0的解
+```
 * ### 打印
 ```
-latex(f) # 打印Latex表达式```
+latex(f) # 打印Latex表达式
+```
 
 ## Matplotlib
 * ### Matplotlib.pyplot&pylab
