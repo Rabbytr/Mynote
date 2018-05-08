@@ -5,6 +5,7 @@
 * 协方差矩阵：np.cov(data,rowvar=0)------[rowvar=0]------行为特征
 * 求平均值：np.mean(data,axis=0)------[axis=0按列]
 * 求阶乘：np.math.factorial(k)
+* 卷积运算: np.convolve(a,b)
 
 ## Pandas
 * #### Data input
