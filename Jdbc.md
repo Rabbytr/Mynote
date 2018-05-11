@@ -33,3 +33,26 @@ PreparedStatement pstmt = conn.prepareStatement(sql);
 pstmt.setInt(1, n);
 pstmt.executeUpdate();
 ```
+* 修改数据使用: pstmt.executeUpdate();
+* 查询数据使用: pstmt.executeQuery();
+
+## DBUtils
+* QueryRunner qr = new QueryRunner(myDBUtil.getDataSource());
+* #### 插入-删除-修改：qr.update(sql,params)
+* #### 批量参数：qr.batch(sql, params[]);
+* #### 查询：qr.query(sql,new ArrayHandler(),params)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+d
