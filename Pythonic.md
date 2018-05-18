@@ -1,4 +1,4 @@
-### 1.使用assert
+### 使用assert
 ```
 x = 1
 y = 2
@@ -42,4 +42,29 @@ print("start{g:*^+30,.2f}end".format(g=123456.789))
 
 ### 默认参数尽量默认None,函数内部动态生成
 默认参数在函数被调用时仅仅被评估一次，以后都会使用第一次评估的结果
-  
+### str()&repr()
+str()面向用户，repr()面向解释器
+### \_\_init\_\_()不是构造函数
+\_\_new\_\_才是
+### 操作符重载
+重载<<操作符
+```
+class cout(object):
+    def __lshift__(self,obj):
+        if obj is 'endl':
+            print()
+            return
+        print(obj)
+        return self
+```
+### 使用生成器提高效率
+斐波那契数列
+```
+def fib(n):
+    a = b = 1
+    for i in range(n):
+        yield a
+        a,b = b,a+b
+f = fib(10)
+a = next(f)
+```
