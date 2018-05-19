@@ -99,3 +99,61 @@ sns.set_context("poster") #设置粗细,分别是paper，notebook, talk, and pos
 sns.set_context("notebook", font_scale=1.5, rc={"lines.linewidth": 2.5}) #单独设置
 sns.set_palette(sns.color_palette("hls", 6)) #设置颜色主题
 ```
+
+## Networkx
+* #### 构建网络
+* 建立一个空图
+```
+import networkx as nx
+G=nx.Graph()     #建立一个空图
+G=nx.DiGraph()   #建立一个有向空图
+```
+* 为网络添加节点
+```
+G.add_node(a point)       #给网络添加节点
+G.add_nodes_from(a list)  #给网络添加节点
+```
+* 为网络添加边
+```
+G.add_edge(a tuple)        #给网络添加边
+G.add_edges_from(a list<tuple>)  #给网络添加边
+```
+* #### 网络可视化
+```
+f = figure(1)
+nx.draw_networkx(G, pos=None, arrows=True, with_labels=True, **kwds)
+```
+设置图片背景颜色
+```
+pl.axis('off')
+f.set_facecolor('c')
+```  
+
+|参数|作用|
+|:--:|:--:|
+|G|一个网络图|
+|pos|图像的布局，可选择参数；如果是字典元素，则节点是关键字，位置是对应的值。如果没有指明，则会是spring的布局|
+|arrows|布尔值，默认True; 对于有向图，如果是True则会画出箭头|
+|with_labels|布尔值，默认为True; 如果为True，则在节点上标注标签|
+|ax|坐标设置，可选择参数,依照设置好的Matplotlib坐标画图|
+|nodelist|一个列表，默认G.nodes(); 给定节点|
+|edgelist|一个列表，默认G.edges();给定边|
+|node_size|向量或者标量，默认300;表示节点的数目，必须和nodelist长度保持一致|
+|node_color|颜色字符串，默认’r’;可以是单个颜色，也可以是和nodelist长度相等的一列颜色字符串|
+|node_shape|字符串，默认’o’;节点的形状|
+|alpha|浮点数，默认1;节点或者边的透明度|
+|cmap|Matplotlib的颜色映射，默认None; 用来表示节点对应的强度|
+|vmin,vmax|浮点数，默认None;节点颜色映射尺度的最大和最小值|
+|linewidths|[None-标量-一列值];节点边界的线宽|
+|width|浮点数，默认1;边的的线宽|
+|edge_color|颜色字符串，默认’r’;边的颜色，可以是一个颜色值，也可以是一列颜色值，如果是一列颜色值，其长度必须和edgelist的长度保持一致|
+|edge_cmap|	Matplotlib的颜色映射，默认None; 用来表示边对应的强度|
+|edge_vmin,edge_vmax|	浮点数，默认None;边的颜色映射尺度的最大和最小值|
+|style|默认’solid’; 边的线的风格，可以是 soldid，dashed， dotted，dashdot|
+|labels|字典元素，默认None;文本形式的节点标签|
+|font_size|整型，默认None; 文本标签的字体大小|
+|font_color|字符串，默认’k’(黑色)|
+|font_weight|字符串，默认’normal’|
+|font_family|字符串，默认’sans-serif’|
+
+* [Networkx文档](https://networkx.github.io/documentation/networkx-1.10/reference/introduction.html)
