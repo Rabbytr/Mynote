@@ -88,8 +88,19 @@ latex(f) # 打印Latex表达式
 
 ## Matplotlib
 * ### Matplotlib.pyplot&pylab
+在matplotlib中画图有两种显示模式：  
+**阻塞模式** 即必须利用plt.show()显示图片，且图片关闭之前代码将阻塞在该行  
+**交互模式** 即plt.plot()后立马显示图片，且不阻塞代码的继续运行  
 读取图像: pl.imread(path) #无pillow包仅支持png  
-显示图像: pl.imshow()
+显示图像: pl.imshow()  
+**动态图**：
+```
+plt.ion()：打开交互模式
+plt.ioff()：关闭交互模式
+plt.clf()：清除当前的Figure对象
+plt.cla()：清除当前的Axes对象
+plt.pause()：暂停功能
+```
 
 * ### Seaborn
 ```
