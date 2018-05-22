@@ -87,17 +87,82 @@ latex(f) # 打印Latex表达式
 ```
 
 ## Matplotlib
+* 使用漫画风格
+with pl.xkcd():  
+使之中文：matplotlib.rc('font', **{'family' : 'FZYaoTi'})
+* 显示黑体中文
+```
+pl.rcParams['font.sans-serif']=['SimHei']
+pl.rcParams['axes.unicode_minus']=False
+```
 * ### Matplotlib.pyplot&pylab
 在matplotlib中画图有两种显示模式：  
 **阻塞模式** 即必须利用plt.show()显示图片，且图片关闭之前代码将阻塞在该行  
 **交互模式** 即plt.plot()后立马显示图片，且不阻塞代码的继续运行  
 读取图像: pl.imread(path) #无pillow包仅支持png  
 显示图像: pl.imshow()  
+设置图像相关信息
+```
+pl.title('Title')
+pl.grid()
+pl.legend(['line1','line2'],fontsize=12)
+pl.xlabel('nameofx')
+```
+设置线宽和透明度，以美观
+```
+pl.plot(x,y,linewidth=2.5,alpha=0.7)
+```
+预留一点空间使数据点更清晰
+```
+pl.xlim(x.min()*1.1, x.max()*1.1)
+```
+用latex获得更好渲染的标签
+```
+pl.xticks([-np.pi, -np.pi/2, 0, np.pi/2, np.pi],
+       [r'$-\pi$', r'$-\pi/2$', r'$0$', r'$+\pi/2$', r'$+\pi$'])
+pl.yticks([-1, 0, +1])
+```
+任意位置添加文字&添加箭头
+```
+ax = f.gca()
+ax.text(5, 0.5,'$E=mc^2$',color='k', fontsize=15)
+ax.annotate('', xy=(3+0.2, 0+0.2), xytext=(5, 0.5),
+            arrowprops=dict(arrowstyle='fancy',facecolor='black'))
+```
+s: 注释的内容，一段文字  
+xytext: 这段文字所处的位置  
+xy: 箭头指向的位置  
+arrowprops: 通过arrowstyle表明箭头的风格或种类  
+**三维图**
+```
+from mpl_toolkits.mplot3d import Axes3D
+f = pl.figure()
+ax = Axes3D(f)
+ax.plot_surface(X, Y, Z,alpha=0.5)
+ax.contourf(X, Y, Z, zdir='z', offset=-100)
+```
+线框图
+```
+ax.plot_wireframe(X, Y, Z, *args, **kwargs)
+```
+X,Y,Z：输入数据  
+rstride:行步长  
+cstride:列步长  
+rcount:行数上限  
+ccount:列数上限  
+表面图
+```
+ax.plot_surface(X, Y, Z, *args, **kwargs)
+```
+X,Y,Z：数据  
+rstride、cstride、rcount、ccount:同Wireframe plots定义  
+color:表面颜色  
+cmap:图层  
 **动态图**：
 ```
 plt.ion()：打开交互模式
 plt.ioff()：关闭交互模式
-plt.clf()：清除当前的Figure对象
+plt.clf()：清除当前的Figure对象,f.clf(),f为窗口指针
 plt.cla()：清除当前的Axes对象
 plt.pause()：暂停功能
 ```
@@ -106,6 +171,7 @@ plt.pause()：暂停功能
 ```
 import seaborn as sns
 sns.set()             #切换到seaborn主题
+sns.set_style({'font.sans-serif':['simhei','Arial']}) # 设置中文
 sns.set_context("poster") #设置粗细,分别是paper，notebook, talk, and poster
 sns.set_context("notebook", font_scale=1.5, rc={"lines.linewidth": 2.5}) #单独设置
 sns.set_palette(sns.color_palette("hls", 6)) #设置颜色主题
