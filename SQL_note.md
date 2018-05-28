@@ -9,6 +9,8 @@ create table "tablename"
 
 [ ] = optional
 
+dataType:primary key	auto_increment
+
 #### 几种常见的数据类型：
 
 char(size) ：固定长度的字符串型。Size是圆括号中指定的参数，它可以由用户随意设置，但是不能超过255个字节。
@@ -87,3 +89,12 @@ delete from "tablename"
 where "columnname" OPERATOR "value" [and|or "column" OPERATOR "value"];
 
 [ ] = optional
+
+## 增加字段
+alter table tname add cname ctype;
+
+## 删除字段
+alter table tname drop cname;
+
+## 调整字段位置
+alter table user modify id type first;
