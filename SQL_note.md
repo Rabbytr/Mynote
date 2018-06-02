@@ -98,3 +98,6 @@ alter table tname drop cname;
 
 ## 调整字段位置
 alter table user modify id type first;
+
+## 修改字段默认值
+alter table表名 alter column字段名 set default默认值;

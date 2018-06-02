@@ -4,6 +4,12 @@
 * #### doGet or doPost
 * #### 销毁destroy
 
+### 返回编码
+* #### 设置格式为text/json  
+* #### response.setContentType("text/json");
+* #### 设置字符集为'UTF-8'
+* #### response.setCharacterEncoding("UTF-8");
+
 ### 跳转
 * #### 重定向 resp.sendRedirect(url)
 * #### 请求转发： getRequestDispatcher(path).forward(request,response)
