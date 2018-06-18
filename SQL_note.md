@@ -101,3 +101,7 @@ alter table user modify id type first;
 
 ## 修改字段默认值
 alter table表名 alter column字段名 set default默认值;
+
+---
+## 搜索
+select * from [user] where column like '%keyword%'
