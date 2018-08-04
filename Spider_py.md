@@ -38,3 +38,13 @@ r.cookies['example_cookie_name'] # 获得cookie
 cookies = dict(cookies_are='working')
 r = requests.get(url, cookies=cookies) # 带cookie请求
 ```
+
+## BeautifulSoup
+* #### 生成对象
+```
+soup = BeautifulSoup(html_sample, 'html.parser')#html.parser是python的内置标准库用来解析html代码
+```
+* #### 获得标签
+```
+soup.select('a')
+```
