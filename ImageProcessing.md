@@ -8,6 +8,15 @@ cv2.imwrite('new_img.jpg', img) # 保存图像
 cv2.waitKey (0)  
 cv2.destroyAllWindows()  
 ```
+* ## 图片变换
+```
+img = cv2.flip(img,0) # 垂直翻转
+img = cv2.flip(img,1) # 水平翻转
+```
+* ## 图片灰度化
+```
+gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+```
 * ## 边缘检测
 ```
 edge = cv2.Canny(image, threshold1, threshold2[, edges[, apertureSize[, L2gradient ]]])
@@ -38,4 +47,56 @@ sift = cv2.xfeatures2d.SIFT_create()
 kp = sift.detect(gray,None)
 img=cv2.drawKeypoints(gray,kp,img)
 #img=cv2.drawKeypoints(gray,kp,img,flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+```
+
+## 视频处理
+### 捕获视频
+```
+cap = cv2.VideoCapture(0)
+
+# 关闭
+cap.release()
+# cv2.destroyAllWindows()
+```
+若传入视频文件路径则读取视频文件，若传入数字比如0，则读取计算机的第一个摄像头
+### 视频参数
+```
+prop = cap.get(propId) # 得到视频的一项参数
+cap.set(propId,value)  # 设置参数
+```
+propId具体如下(顺序对应Id):  
+![propId](./imgs/propId.png)
+### 得到视频每一帧
+```
+while(cap.isOpened()):
+    ret, frame = cap.read()
+    if ret == true:
+
+        #tackle per frame
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    else:
+        break
+```
+### 保存视频
+```
+width = int(cap.get(3))
+height = int(cap.get(4))
+fps = int(cap.get(5))
+
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
+out = cv2.VideoWriter('output.mp4',fourcc, fps, (width,height))
+
+while(cap.isOpened()):
+    ret, frame = cap.read()
+    if ret == true:
+        out.write(frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    else:
+        break
+cap.release()
+out.release()
+cv2.destroyAllWindows()
 ```
