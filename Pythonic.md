@@ -68,3 +68,20 @@ def fib(n):
 f = fib(10)
 a = next(f)
 ```
+### 自定义比较器
+functools库中提供了一个装饰器 total_ordering  
+只需要实现 __eq__ 方法和其他任意一个方法就可以实现cmp.
+```
+from functools import total_ordering
+
+@total_ordering
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+    def __eq__(self, other):
+        return (self.x, self.y) == (other.x, other.y)
+
+    def __lt__(self, other):
+        return (self.x, self.y) < (other.x, other.y)
+```
