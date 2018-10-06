@@ -12,3 +12,21 @@ set(gca,'XLim',[-pi/2 pi])       %坐标轴范围
 set(gca,'XTick',[-pi/2:pi/4:pi]) %坐标轴显示步长
 set(gca,'XTickLabel',{'-pi/2' '-pi/4:' '0' 'pi/4' 'pi/2' 'pi*3/4' 'pi'});%替换相应步长标签
 ```
+
+## Image Processing
+## 基本读写
+```
+img = imread('peppers.png'); % 读取图片
+imwrite(gray,'test.png');    % 保存图片
+```
+## 灰度变化
+```
+gray = rgb2gray(img);        % 灰度化
+J = histeq(gray);            % 直方图均衡化
+```
+## 显示
+```
+imshow(img);
+image(img);                  % 显示图片
+imhist(gray);                % 显示直方图
+```
