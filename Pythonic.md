@@ -89,3 +89,9 @@ class Point:
 ### for...else...
 for...else...的else部分用来处理没有从for循环中断的情况。
 有了它，我们不用设置状态变量来检查是否for循环有break出来，简单方便。
+
+### 设置最大迭代深度
+```
+from sys import setrecursionlimit
+setrecursionlimit(maxrecursion)
+```
