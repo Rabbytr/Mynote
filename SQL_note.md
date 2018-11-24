@@ -100,7 +100,7 @@ alter table tname drop cname;
 alter table user modify id type first;
 
 ## 修改字段默认值
-alter table表名 alter column字段名 set default默认值;
+alter table表名 alter column 字段名 set default默认值;
 
 ---
 ## 搜索
