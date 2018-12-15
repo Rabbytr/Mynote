@@ -11,6 +11,7 @@
 #define mset(a,b) memset(a,b,sizeof(a))
 #define mkpr make_pair
 #define ll long long
+#define print(x) cout<<x<<"\n"
 
 using namespace std;
 
