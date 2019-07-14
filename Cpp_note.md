@@ -1,5 +1,5 @@
 ## OJ框架：
-```
+```c++
 #include <bits/stdc++.h>
 
 #pragma GCC optimize("O3")
@@ -23,3 +23,12 @@ int main(){
   return 0;
 }
 ```
+
+#### cout保留小数点后两位
+
+```c++
+cout<<setiosflags(ios::fixed)<<setprecision(2);
+```
+
+###### 保留有效数字去掉setiosflags(ios::fixed)即可
+

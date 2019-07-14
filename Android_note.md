@@ -94,3 +94,9 @@ SharedPreferences preferences = getSharedPreferences("LoginInfo",MODE_PRIVATE);
 boolean isLogin = preferences.getBoolean("isLogin",false);
 ```
 
+#### 解决RecyclerView滚动嵌套的bug
+
+```
+recyclerView.setFocusableInTouchMode(false);
+```
+
