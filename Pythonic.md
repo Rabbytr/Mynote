@@ -15,8 +15,13 @@ print("start{g:*^+30,.2f}end".format(g=123456.789))
 ```
 
 ### 默认参数尽量默认None,函数内部动态生成
+
 默认参数在函数被调用时仅仅被评估一次，以后都会使用第一次评估的结果
+
+### numpy.argmin传入map会有问题
+
 ### str()&repr()
+
 str()面向用户，repr()面向解释器
 ### 操作符重载
 重载<<操作符
@@ -29,10 +34,15 @@ class cout(object):
         print(obj)
         return self
 ```
+### 私有成员
+
+Python私有成员`__var`会被映射为`_{class name}__var`
+
 ### 自定义比较器
 
 functools库中提供了一个装饰器 total_ordering  
 只需要实现 __eq__ 方法和其他任意一个方法就可以实现cmp.
+
 ```
 from functools import total_ordering
 
@@ -169,6 +179,8 @@ class ClassMethod(object):
 
 ####  上下文管理
 
+*上下文管理器* 是一个对象，它定义了在执行 [`with`](https://docs.python.org/zh-cn/3/reference/compound_stmts.html#with) 语句时要建立的运行时上下文。 上下文管理器处理进入和退出所需运行时上下文以执行代码块。 通常使用 `with` 语句（在 [with 语句](https://docs.python.org/zh-cn/3/reference/compound_stmts.html#with) 中描述），但是也可以通过直接调用它们的方法来使用。
+
 列表事物处理的两种上下文管理器写法
 
 ```python
@@ -226,3 +238,54 @@ func.__wrapped__()
 ```
 
 使用`functools` 的 `wraps` 装饰器能保留函数的元信息，`@wraps` 有一个重要特征是它能让你通过属性 `__wrapped__` 直接访问被包装函数。
+
+
+
+### Python特殊属性&方法
+
+见[Python数据模型](https://docs.python.org/zh-cn/3/reference/datamodel.html)
+
+* Python类静态成员在类`__dict__`中
+* 访问实例的属性才会调用`__getattribute__`或`__getattr__`
+
+#### `__getattribute__`Python实现
+
+```python
+def object_getattribute(obj, name):
+    "Emulate PyObject_GenericGetAttr() in Objects/object.c"
+    null = object()
+    objtype = type(obj)
+    cls_var = getattr(objtype, name, null)
+    descr_get = getattr(type(cls_var), '__get__', null)
+    if descr_get is not null:
+        if (hasattr(type(cls_var), '__set__')
+            or hasattr(type(cls_var), '__delete__')):
+            return descr_get(cls_var, obj, objtype)     # data descriptor
+    if hasattr(obj, '__dict__') and name in vars(obj):
+        return vars(obj)[name]                          # instance variable
+    if descr_get is not null:
+        return descr_get(cls_var, obj, objtype)         # non-data descriptor
+    if cls_var is not null:
+        return cls_var                                  # class variable
+    raise AttributeError(name)
+```
+
+可见实例查找通过命名空间链进行扫描，优先级从高到低为**数据描述器**，**实例变量**、**非数据描述器**、**类变量**，最后是 `__getattr__()`（如果有）。
+
+如果 `a.x` 找到了一个描述器，那么将通过 `desc.__get__(a, type(a))` 调用它。
+
+属性查找不会直接调用 `object.__getattribute__()`，点运算符和 `getattr()`函数均通过辅助函数执行属性查找：
+
+```python
+def getattr_hook(obj, name):
+    "Emulate slot_tp_getattr_hook() in Objects/typeobject.c"
+    try:
+        return obj.__getattribute__(name)
+    except AttributeError:
+        if not hasattr(type(obj), '__getattr__'):
+            raise
+    return type(obj).__getattr__(obj, name)             # __getattr__
+```
+
+同时，如果用户直接调用 `object.__getattribute__()` ，则 `__getattr__()` 的钩子将被绕开。
+
