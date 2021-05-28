@@ -1,4 +1,5 @@
 ## OJ框架：
+
 ```c++
 #include <bits/stdc++.h>
 
@@ -24,6 +25,8 @@ int main(){
 }
 ```
 
+---
+
 #### cout保留小数点后两位
 
 ```c++
@@ -32,9 +35,11 @@ cout<<setiosflags(ios::fixed)<<setprecision(2);
 
 ###### 保留有效数字去掉setiosflags(ios::fixed)即可
 
+---
+
 ### C++内存
 
-![cppmem](/Users/rabbyt/workspace2019/Mynote/imgs/cppmemory.png)
+![cppmem](.//imgs/cppmemory.png)
 
 虚拟内存技术使得每个进程都可以独占整个内存空间，地址从零开始，直到内存上限。 每个进程都将这部分空间（从低地址到高地址）分为六个部分：
 
@@ -43,7 +48,7 @@ cout<<setiosflags(ios::fixed)<<setprecision(2);
   - 读写区域(RW)：存放非零全局变量、静态变量
   - 只读区域(RO)：存放常量
 * BSS（Block Started by Symbol）段：**初始化为0或未初始化**的全局变量和静态变量。
-* HEAP（堆空间）：动态内存区域，使用`malloc`或`new`申请的内存。
+* HEAP（堆空间）：动态内存区域，使用`malloc`，`make_shared`或`new`申请的内存。
 * 未使用的内存。
 * STACK（栈空间）：局部变量、参数、返回值都存在这里，函数调用开始会参数入栈、局部变量入栈；调用结束依次出栈。
 
@@ -59,6 +64,8 @@ cout<<setiosflags(ios::fixed)<<setprecision(2);
 
 [待看](http://chenqx.github.io/2014/09/25/Cpp-Memory-Management/)
 
+---
+
 ### `const`&`point`
 
 ```c++
@@ -73,3 +80,85 @@ int const * p = &a;
 - 如果const位于*的左侧，则const就是修饰指针所指向的变量，即指针指向常量（常量指针）
 
 引用是一种指针常量
+
+---
+
+## 智能指针
+
+### `shared_ptr`
+
+* 不能将一个**内置指针**隐式转为一个**智能指针**
+
+  ```c++
+  shared_ptr<int> p1 = new int(1024); // 错误
+  shared_ptr<int> p2(new int(1024));  // 正确
+  ```
+
+* 一个用来初始化**智能指针**的**普通指针**必须指向**动态内存**
+
+* 推荐使用`make_shared`而不是`new`创建
+
+* 引用计数为0会自动释放其指向的内存
+
+### `unique_ptr`
+
+* 不能拷贝或赋值`unique_ptr`，但可：
+
+  ```c++
+  unique_ptr<string> p2(p1.release());
+  p2.reset(p3.release());
+  ```
+
+### `weak_ptr`
+
+* 防止循环引用，不占用所有权
+
+---
+
+## 虚函数
+
+* 在子类**覆盖虚函数**时加上`override`关键字使得**编译器**能够发现是否**正确覆盖**
+* 可以使用`base->Cls::vfunc()`回避虚函数机制
+* 在**虚函数**声明语句**分号之前**加上**`=0`**可以将该虚函数声明为**纯虚函数**（Pure virtual function）；该做法只能在类内部
+* 含有**纯虚函数**的类时抽象基类，不能够创建抽象基类的对象
+
+#### 实现机制——虚表
+
+每个包含虚函数类的对象都拥有一个虚表，编译器会在类中添加一个指针`__vptr`，对象创建则该指针会指向虚表。所以对象在在向上转型时，**虚表指针`__vptr`**亦是**基类成员**部分，所以**基类指针**可以访问到**派生类的虚表指针**，实现了**动态绑定**。
+
+动态绑定要符合以下条件：
+
+* 通过指针调用**虚函数**
+* upcast
+
+---
+
+## 派生类向基类转换可访问性？
+
+待写
+
+---
+
+## 继承
+
+* `public`继承：正常继承，一切常态
+
+* `protected`继承：基类**公共成员**成为派生类**保护成员**
+
+* `private`继承：基类**公共成员**及**保护成员**成为派生类**私有成员**
+
+* 使用`using`可以改变个别成员的可访问性
+
+  ```c++
+  class B:private A{
+      public:
+      	using A::var;
+  }
+  ```
+
+  
+
+
+
+* 友员关系不能继承，每个类自己控制各自成员访问权限
+
