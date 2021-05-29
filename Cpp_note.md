@@ -83,6 +83,22 @@ int const * p = &a;
 
 ---
 
+## Lambda函数
+
+```c++
+[capture list](parameter list)[mutable]->return type {function body}
+```
+
+* `capture list`为**捕获列表**，变量或引用在捕获后才能被`lambda`使用，编译器会为`lambda`创建一个类和类对象，**捕获参数**成为对象**数据成员**。
+  * `[]` 不捕获任何变量
+  * `[&]` 以**引用**方式捕获外部作用域的所有变量
+  * `[=]` 以**赋值**方式捕获外部作用域的所有变量
+  * `[=, &foo]` 以赋值方式捕获外部作用域所有变量，以引用方式捕获foo变量
+  * `[bar]` 以赋值方式捕获bar变量，不捕获其它变量
+  * `[this]` 捕获当前类的this指针，让lambda表达式拥有和当前类成员同样的访问权限，可以**修改类的成员变量，使用类的成员函数**。如果已经使用了&或者=，就默认添加此选项。
+* 如果需要修改捕获的变量，则可以加上`mutable`关键字
+* 编译器无法推断`function body`返回值时，需要加上`return type`
+
 ## 智能指针
 
 ### `shared_ptr`
@@ -100,18 +116,38 @@ int const * p = &a;
 
 * 引用计数为0会自动释放其指向的内存
 
+* 动态绑定**删除器**：
+
+  ```c++
+  shared_ptr<cls> p(&obj, delete_func);	// 运行时绑定
+  unique_ptr<cls, decltype(delete_func)*> p(&obj, delete_func); // 编译时绑定，删除器是指针的一部分
+  ```
+
+  
+
 ### `unique_ptr`
 
 * 不能拷贝或赋值`unique_ptr`，但可：
 
   ```c++
   unique_ptr<string> p2(p1.release());
-  p2.reset(p3.release());
+  p2.reset(p1.release());
+  p2.reset(std::move(p1));
   ```
 
 ### `weak_ptr`
 
 * 防止循环引用，不占用所有权
+
+* 不能直接访问，需要：
+
+  ```c++
+  if(shared_ptr<int> np = wp.lock()){
+      // 操作np
+  }
+  ```
+
+  
 
 ---
 
@@ -161,4 +197,10 @@ int const * p = &a;
 
 
 * 友员关系不能继承，每个类自己控制各自成员访问权限
+
+## 右值引用
+
+* 通过`&&`而非`&`获得**右值引用**
+* 只能绑定到一个**将要销毁**的对象
+* 不能将**右值引用**直接绑定到**左值**上，但可以通过`std::move`将**左值**转化为**右值引用类型**
 
