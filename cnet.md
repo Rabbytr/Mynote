@@ -43,6 +43,66 @@ UDP 包的大小就应该是 1500 - IP头(20) - UDP头(8) = 1472(Bytes)
 
 鉴于Internet(非局域网)上的标准MTU值为576字节，所以建议在进行Internet的UDP编程时，最好将UDP的数据长度控制在548字节 (576-8-20)以内
 
+## 三次握手&四次挥手
+
+* ACK位除了**主动打开的SYN**（一般是client）报文，皆为1，皆有
+* ack永远为上一个收到报文的seq+1
+* seq永远为上一个收到报文的ack
+
+## 重传机制
+
+* **超时重传**
+
+  超过RTO（Retransmission Timeout）未得到确认则重传
+
+* **快速重传**
+
+  以**数据**为驱动而非**时间**，连续收到3个重复ACK则立即重传
+
+* **SACK（Selective Acknowledge）**
+
+  **快速重传**不知道该重传之前的**一个**还是**所有**
+
+  在TCP头部选项字段加入SACK，将**缓存的地图**发送给发送方
+
+* **D-SACK（Duplicate SACK）**
+
+  使用SACK告诉对方哪些数据已经被**重复接收**了
+
+## 拥塞控制
+
+#### 慢启动
+
+初始化`cwnd`一个`MSS`大小，每收到一个ACK则**翻倍**，指数增直到`cwnd == ssthresh`
+
+#### 拥塞避免
+
+当`cwnd`超过ssthresh(slow start threshold)后，每收到一个ACK则**+1**，线性增长
+
+#### 拥塞发生
+
+当发生「超时重传」：
+
+```python
+ssthresh = cwnd/2
+cwnd = 1
+// 进入慢启动
+```
+
+![慢启动](./imgs/slowstart.jpg)
+
+当发生「快速重传」则使用「快速恢复」:
+
+![快速恢复](./imgs/quickrec.jpg)
+
+#### 快速恢复
+
+```python
+ssthresh = cwnd
+cwnd = ssthresh + 3 // 收到3个重复ACK
+// 进入拥塞避免
+```
+
 ## Nagle算法
 
 * 上一个分组**得到确认**才会发送下一个分组
@@ -66,3 +126,30 @@ UDP 包的大小就应该是 1500 - IP头(20) - UDP头(8) = 1472(Bytes)
 * **TCP头部**加上**数据长度**
 * **应用层**自己解决
 
+## HTTP over TSL
+
+```sequence
+	Client -> Server:"client hello",字符串cr\n可用的加密算法和压缩算法,TLS版本,
+	Server -> Client:"server hello",字符串sr\n所用加密算法和压缩算法,证书及其公钥
+	Client -> Client:验证证书\n有问题则警告用户
+	Client -> Server:证书公钥加密后的随机\n字符串pr
+	Server -> Server:私钥解密prandom\n根据cr,sr,p\n生成对称主密钥
+	Client -> Client:根据cr,sr,pr生成对称主密钥KEY
+	Client -> Server:KEY加密的"finished"
+	Server -> Server:生成hash\n查是否对应
+	Server -> Client:KEY加密的"finished"
+```
+
+## 浏览器输入网址到获得页面过程
+
+* 浏览器缓存中查找DNS
+* 操作系统缓存中查找DNS
+* 检查本地域名解析文件`hosts`是否有
+* 向**本地域名服务器**发起DNS请求
+* 本地DNS服务器没有，检查本地DNS服务器缓存
+* **本地DNS服务器**访问**根域名服务器**递归查询
+* 浏览器获得域名对应的IP地址以后，浏览器向服务器请求建立链接，发起TCP三次握手
+* TSL握手
+* 服务器根据请求进行处理计算，将结果返回给浏览器
+* 浏览器解析，遇到静态资源引用则继续向服务器请求这些资源
+* 渲染界面
